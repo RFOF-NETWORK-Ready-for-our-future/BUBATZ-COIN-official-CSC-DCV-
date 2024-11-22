@@ -113,3 +113,6 @@ npm install @RFOF-NETWORK
 ```
 
 Dieser Befehl installiert das benötigte Paket von @RFOF-NETWORK.
+
+# Lizenz
+## BSL 1.1 for non-commercial use
