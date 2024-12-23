@@ -1,4 +1,4 @@
-contracts/BubatzCoin.sol // SPDX-License-Identifier: MIT pragma solidity ^0.8.0;
+// SPDX-License-Identifier: MIT pragma solidity ^0.8.0;
 
 import "./RFOFNetworkAPI.sol"; import "./BBC_Training.sol"; import "./BubatzManager.sol"; import "./CTC.sol"; import "./CTC_Training.sol";
 
