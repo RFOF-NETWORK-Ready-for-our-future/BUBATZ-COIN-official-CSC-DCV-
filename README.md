@@ -3,101 +3,402 @@
 
 Das Repository für den Bubatz Coin Official (CSC-DCV) beinhaltet die folgenden Verzeichnisse und Dateien:
 
-```plaintext
 BubatzCoin/
 ├── contracts/
-│   ├── BubatzCoin.sol
-│   ├── BBC_Training.sol
-│   ├── BubatzManager.sol
-│   ├── CTC.sol
-│   └── CTC_Training.sol
+│   ├── BubatzCoin\.sol
+│   ├── RFOFNetworkAPI\.sol
+│   ├── BBC_Training\.sol
+│   ├── BubatzManager\.sol
+│   ├── CTC\.sol
+│   ├── CTC_Training\.sol
+│   ├── BubatzCoinFunc\.fc
 ├── migrations/
-│   └── 1_deploy_contracts.js
+│   └── 1_deploy_contracts\.js
 ├── test/
-│   ├── BubatzCoin.test.js
-│   ├── BBC_Training.test.js
-│   ├── CTC_Training.test.js
+│   ├── BubatzCoin\.test\.js
+│   ├── BBC_Training\.test\.js
+│   ├── CTC_Training\.test\.js
 ├── scripts/
-│   └── BubatzManager.js
-├── .gitignore
-├── README.md
-├── truffle-config.js
-├── package.json
-└── $BBC_Token_Code.py.fc
-```
-
-### Dateien im Detail
-
-- **contracts/**:
-  - **BubatzCoin.sol**: Der Haupt-Smart-Contract für den Bubatz Coin.
-  - **BBC_Training.sol**: Smart Contract für den BBC Training Token.
-  - **BubatzManager.sol**: Der Manager-Smart-Contract, der das Ökosystem steuert.
-  - **CTC.sol**: LP-Token-Smart-Contract für den Cannabis Technik Coin.
-  - **CTC_Training.sol**: Smart Contract für den CTC Training Token.
-
-- **migrations/**:
-  - **1_deploy_contracts.js**: Deployment-Skript für die Smart Contracts.
-
-- **test/**:
-  - **BubatzCoin.test.js**: Tests für den BubatzCoin Smart Contract.
-  - **BBC_Training.test.js**: Tests für den BBC Training Smart Contract.
-  - **CTC_Training.test.js**: Tests für den CTC Training Smart Contract.
-
-- **scripts/**:
-  - **BubatzManager.js**: Skript zur Interaktion mit dem Bubatz Manager Smart Contract.
-
-- **.gitignore**: Dateimuster, die von Git ignoriert werden sollen.
-- **README.md**: Dokumentation des Projekts.
-- **truffle-config.js**: Konfiguration für das Truffle Framework.
-- **package.json**: Konfigurationsdatei für npm.
-- **$BBC_Token_Code.py.fc**: Python-Datei für zusätzliche Funktionalität.
-
-### Smart Contract Code
-
-**BBC_Training.sol**
-```solidity
+│   └── BubatzManager\.js
+├── \.gitignore
+├── README\.md
+├── truffle-config\.js
+├── package\.json
+└── public/
+    ├── index\.html
+    ├── css/
+    │   └── styles\.css
+    ├── js/
+    │   └── main\.js
+    └── img/
+contracts/BubatzCoin.sol
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0\.8\.0;
+
+import "\./RFOFNetworkAPI\.sol";
+import "\./BBC_Training\.sol";
+import "\./BubatzManager\.sol";
+import "\./CTC\.sol";
+import "\./CTC_Training\.sol";
+
+contract BubatzCoin {
+    uint256 public totalSupply = 1000000 * 10 ** 9;
+    mapping(address => uint256) public balanceOf;
+    RFOFNetworkAPI public rfOfNetwork;
+    address public satoramyOnTon = address(0xe4fb51aa7386080b6d8b4c00192f1a26864ca9f95e76074c9a787826937b7d2e); // Address of satoramy-on\.ton
+    address public rfofNetworkOnTon = address(0x42f3dee8fdcf79854d421f47a1ca6724a44e26d42f306e7d04ccc1e7242fbf06); // Address of rfof-network-on\.ton
+
+    constructor(address _rfOfNetworkAddress) {
+        balanceOf[msg\.sender] = totalSupply;
+        rfOfNetwork = RFOFNetworkAPI(_rfOfNetworkAddress);
+    }
+
+    function transfer(address _to, uint256 _value) public returns (bool success) {
+        require(balanceOf[msg\.sender] >= _value, "Insufficient balance");
+        balanceOf[msg\.sender] -= _value;
+        balanceOf[_to] += _value;
+        return true;
+    }
+
+    function initializeBitcoinBlockchain() public {
+        rfOfNetwork\.initialize_bitcoin_blockchain();
+    }
+
+    function captureLostHashes() public {
+        rfOfNetwork\.capture_lost_hashes();
+    }
+
+    function transferToTONNetwork(address tonAddress) public {
+        rfOfNetwork\.transfer_to_ton_network(tonAddress);
+    }
+
+    function convertBTCtoTON() public {
+        // Code to convert BTC to TON before liquidating to Bubatz Token address
+        rfOfNetwork\.transfer_to_ton_network(satoramyOnTon);
+    }
+}
+
+
+contracts/RFOFNetworkAPI.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0\.8\.0;
+
+contract RFOFNetworkAPI {
+    string public apiName = "@RFOF-NETWORK";
+    uint256 public defaultNumber = 42;
+    string public githubUser = "@RFOF-NETWORK";
+    mapping(string => string) public repositories;
+    address public rfofNetworkOnTon = address(0x42f3dee8fdcf79854d421f47a1ca6724a44e26d42f306e7d04ccc1e7242fbf06); // Address of rfof-network-on\.ton
+    address public satoramyOnTon = address(0xe4fb51aa7386080b6d8b4c00192f1a26864ca9f95e76074c9a787826937b7d2e); // Address of satoramy-on\.ton
+
+    constructor() {
+        repositories["rfof-network\.org"] = "https://github\.com/RFOF-NETWORK-Ready-for-our-future/rfof-network\.org";
+        repositories["PRAI-spidernet"] = "https://github\.com/RFOF-NETWORK/PRAI-spidernet-";
+    }
+
+    function initialize_bitcoin_blockchain() public {
+        // Code zum Initialisieren der Bitcoin Blockchain
+    }
+
+    function capture_lost_hashes() public {
+        // Code zum Erfassen verlorener Hashes in der Blockchain
+    }
+
+    function transfer_to_ton_network(address tonAddress) public {
+        // Code zum Übertragen der BTC in das TON Network
+    }
+
+    function seo_optimization() public {
+        // Code zur Nutzung von SEO für Internetsuchen
+    }
+
+    function auto_configure() public {
+        // Code zur automatisierten Abwicklung und Konfiguration gemäß Apache-2\.0 Lizenz
+    }
+
+    function update_repositories() public {
+        // Code zum Aktualisieren der Repositories
+    }
+
+    function integrate_code_language_42() public 
+    // Code zur Integration der Codesprache 42
+}
+
+
+}
+
+**contracts/BubatzCoinFunc\.fc**
+```func
+// Example FunC contract for BubatzCoin integration
+
+() main() {
+    // Initialization code
+    int msg_value = 0;
+    // Your FunC code here
+}
+
+
+contracts/BBC_Training.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0\.8\.0;
 
 contract BBC_Training {
     // Contract code for BBC Training Token
 }
-```
 
-**CTC_Training.sol**
-```solidity
+
+contracts/BubatzManager.sol
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0\.8\.0;
+
+contract BubatzManager {
+    // Manager contract for Bubatz ecosystem
+}
+
+
+contracts/CTC.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0\.8\.0;
+
+contract CTC {
+    // LP-Token contract for Cannabis Technik Coin
+}
+
+
+contracts/CTC_Training.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0\.8\.0;
 
 contract CTC_Training {
     // Contract code for CTC Training Token
 }
-```
 
-### Test-Skripte
 
-**BBC_Training.test.js**
-```javascript
-const BBC_Training = artifacts.require("BBC_Training");
+migrations/1_deploy_contracts.js
+const BubatzCoin = artifacts\.require("BubatzCoin");
+const RFOFNetworkAPI = artifacts\.require("RFOFNetworkAPI");
+const BBC_Training = artifacts\.require("BBC_Training");
+const BubatzManager = artifacts\.require("BubatzManager");
+const CTC = artifacts\.require("CTC");
+const CTC_Training = artifacts\.require("CTC_Training");
+
+module\.exports = function(deployer) {
+    deployer\.deploy(RFOFNetworkAPI)\.then(function() {
+        return deployer\.deploy(BubatzCoin, RFOFNetworkAPI\.address);
+    });
+    deployer\.deploy(BBC_Training);
+    deployer\.deploy(BubatzManager);
+    deployer\.deploy(CTC);
+    deployer\.deploy(CTC_Training);
+};
+
+
+test/BubatzCoin.test.js
+const BubatzCoin = artifacts\.require("BubatzCoin");
+
+contract("BubatzCoin", accounts => {
+    it("should put 1000000 BubatzCoin in the first account", async () => {
+        const instance = await BubatzCoin\.deployed();
+        const balance = await instance\.balanceOf(accounts[0]);
+        assert\.equal(balance\.valueOf(), 1000000 * 10 ** 9, "1000000 wasn't in the first account");
+    });
+});
+
+
+test/BBC_Training.test.js
+const BBC_Training = artifacts\.require("BBC_Training");
 
 contract("BBC_Training", accounts => {
     it("should deploy the BBC_Training contract", async () => {
-        const instance = await BBC_Training.deployed();
-        assert(instance.address !== '');
+        const instance = await BBC_Training\.deployed();
+        assert(instance\.address \!== '');
     });
 
     // Weitere Tests hier hinzufügen
 });
-```
 
-**CTC_Training.test.js**
-```javascript
-const CTC_Training = artifacts.require("CTC_Training");
+
+test/CTC_Training.test.js
+const CTC_Training = artifacts\.require("CTC_Training");
 
 contract("CTC_Training", accounts => {
     it("should deploy the CTC_Training contract", async () => {
-        const instance = await CTC_Training.deployed();
-        assert(instance.address !== '');
+        const instance = await CTC_Training\.deployed();
+        assert(instance\.address \!== '');
+    });
+
+    // Weitere Tests hier hinzufügen
+});
+
+
+scripts/BubatzManager.js
+// Skript zur Interaktion mit dem Bubatz Manager Smart Contract
+
+
+.gitignore
+node_modules/
+build/
+
+
+README.md
+# BUBATZ COIN official (CSC-DCV)
+
+This is the official repository for the BUBATZ COIN (BBC) project\.
+
+## Getting Started
+
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes\.
+
+### Prerequisites
+
+- Node\.js
+- Truffle
+- Ganache
+
+### Installing
+
+```bash
+npm install
+truffle compile
+truffle migrate
+truffle test
+
+Deployment
+
+Add additional notes about how to deploy this on a live system.
+
+**truffle-config\.js**
+```javascript
+module\.exports = {
+    networks: {
+        development: {
+            host: "127\.
+public/index.html
+<\!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1\.0">
+    <title>BUBATZ COIN official (CSC-DCV)</title>
+    <link rel="stylesheet" href="css/styles\.css">
+</head>
+<body>
+    <header>
+        <h1>BUBATZ COIN official (CSC-DCV)</h1>
+    </header>
+    <main>
+        <section id="games">
+            <h2>Mini Games</h2>
+            <ul>
+                <li><a href="https://t\.me/kryptohustler_bot" target="_blank">Crypto Hustler</a></li>
+                <li><a href="https://t\.me/rfofblockchain_bot" target="_blank">Blockchain Mini App</a></li>
+                <li><a href="https://t\.me/RFOF_BOT" target="_blank">BUBATZ MANAGER</a></li>
+            </ul>
+        </section>
+        <section id="navigation">
+            <h2>Navigation</h2>
+            <ul>
+                <li><a href="https://www\.rfofspidernet\.de/" target="_blank">RFOF Spidernet</a></li>
+                <li><a href="https://www\.rfofspidernet\.de/bubatz-manager" target="_blank">BUBATZ MANAGER</a></li>
+            </ul>
+        </section>
+    </main>
+    <script src="js/main\.js"></script>
+</body>
+</html>
+
+
+public/css/styles.css
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 1rem;
+    text-align: center;
+}
+
+main {
+    padding: 2rem;
+}
+
+section {
+    margin-bottom: 2rem;
+}
+
+h2 {
+    color: #333;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+ul li {
+    margin-bottom: 1rem;
+}
+
+a {
+    color: #1a73e8;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+
+public/js/main.js
+// JavaScript für zukünftige Interaktionen und Funktionalitäten
+
+Aktualisierte README.md
+# BUBATZ COIN official (CSC-DCV)
+
+This is the official repository for the BUBATZ COIN (BBC) project\.
+
+## Getting Started
+
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes\.
+
+### Prerequisites
+
+- Node\.js
+- Truffle
+- Ganache
+
+### Installing
+
+```bash
+npm install
+truffle compile
+truffle migrate
+truffle test
+
+Features
+
+1. Mini Games Integration:
+
+Crypto Hustler
+Blockchain Mini App
+BUBATZ MANAGER
+
+
+2. Navigation:
+
+RFOF Spidernet
+BUBATZ MANAGER
+
+Deployment
+
+Add additional notes about how to deploy this on a live system.
+Sources:
+[1] [](https://github\.com/saberviolet-M/learningOfWeb/tree/7bceed4b996a26ed9bde12769640759f686b4602/12_Node\.js%2Fday_60%2Fday60\.md)
     });
 
     // Weitere Tests hier hinzufügen
@@ -107,6 +408,8 @@ contract("CTC_Training", accounts => {
 ### NPM Paketinstallation
 
 Um das Projekt zu installieren und die notwendigen Pakete hinzuzufügen, verwende die folgenden Befehle:
+
+
 
 ```bash
 npm install @RFOF-NETWORK
